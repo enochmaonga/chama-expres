@@ -9,6 +9,7 @@ import {
   Grid,
   Box,
 } from "@mui/material";
+import { SERVER_URL } from "@/config";
 
 const months = [
   "January", "February", "March", "April", "May", "June",
@@ -31,9 +32,31 @@ function CashCollectionForm() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
+
+    try {
+      const response = await fetch(`${SERVER_URL}/post`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        alert(`Error: ${data.error}`);
+      } else {
+        alert("Submission successful!");
+        setFormData({ name: "", amount: "", month: "", year: "" });
+      }
+    } catch (error) {
+      console.error("Submission failed:", error);
+      alert("An unexpected error occurred.");
+    }
   };
 
   return (
