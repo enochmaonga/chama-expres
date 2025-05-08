@@ -10,6 +10,7 @@ import {
   Box,
 } from "@mui/material";
 import { SERVER_URL } from "@/config";
+import TopAppBar from "./Topbar";
 
 const months = [
   "January", "February", "March", "April", "May", "June",
@@ -60,26 +61,30 @@ function CashCollectionForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-  <Card className="w-1/2">
-    <CardContent>
+    <div className="min-h-screen flex items-center justify-center ">
+      <Box sx={{ maxWidth: 400, margin: "auto", padding: 2, mt: 10 }}>
+          <Typography variant="h5" component="div" gutterBottom>
+            Cash Collection Form
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Please fill in the details below:
+          </Typography>
+       
+      </Box>
+
     <Box
   sx={{
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: '#f0f0f0', // Replace with your desired color
     padding: 2, // Optional: adds padding inside the box
+
   }}
 >
-  <Typography variant="h5" gutterBottom>
-    Chama-expres
-  </Typography>
+  <TopAppBar />
 </Box>
-
-    
       <form onSubmit={handleSubmit}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <Grid container direction="column" spacing={2} sx={{ width: "100%", maxWidth: 400, mt: 4 }}>
+      <Grid container direction="column" spacing={2} sx={{ width: "100%", maxWidth: 400, mt: 2 }}>
               <Grid item xs={12} >
                 <TextField
                   label="Name"
@@ -143,8 +148,7 @@ function CashCollectionForm() {
             </Grid>
             </div>
           </form>
-        </CardContent>
-      </Card>
+ 
     </div>
   );
 }

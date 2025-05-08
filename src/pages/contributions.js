@@ -3,13 +3,14 @@ import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/styles/theme';
-import CashCollectionForm from '@/components/home/App';
-
-export default function HomePage(pageProps) {
+import MemberCont from '@/components/contribute/Contributions';
+function Contributions() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <CashCollectionForm {...pageProps}/>
+      <MemberCont />
     </ThemeProvider>
   );
 }
+
+export default Contributions;
