@@ -1,16 +1,29 @@
-// pages/index.js or app/page.jsx (depending on structure)
-import React from 'react';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import theme from '@/styles/theme';
-import DashboardComponent from '@/components/dashboard/DashboardComponent';
-function Contributions() {
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <DashboardComponent />
-    </ThemeProvider>
-  );
-}
+// // pages/dashboard.js
+// import { getSession } from "next-auth/react";
 
-export default Contributions;
+// export default function DashboardPage({ user }) {
+//   return (
+//     <div>
+//       <h1>Welcome {user.email}</h1>
+//     </div>
+//   );
+// }
+
+// export async function getServerSideProps(context) {
+//   const session = await getSession(context);
+
+//   if (!session) {
+//     return {
+//       // redirect: {
+//       //   destination: "/login",
+//       //   permanent: false,
+//       // },
+//     };
+//   }
+
+//   return {
+//     props: {
+//       user: session.user,
+//     },
+//   };
+// }

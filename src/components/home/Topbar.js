@@ -18,7 +18,7 @@ const TopAppBar = () => {
   <Toolbar>
     {/* Logo on the left */}
     <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 'bold', color: 'white' }}>
-      MyApp
+      ChamaXpress
     </Typography>
 
     {/* Avatar on the right */}

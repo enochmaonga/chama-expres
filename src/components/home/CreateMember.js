@@ -6,22 +6,22 @@ import {
   TextField,
   Typography,
   Alert,
+  CircularProgress, // ✅ Import here
 } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import { SERVER_URL } from '@/config';
-
-
 
 const CreateMember = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     middleName: '',
     lastName: '',
-    phone: '',
-    email: ''
+    phoneNumber: '',
+    email: '',
+    password: ''
   });
 
   const [status, setStatus] = useState({ message: '', type: '' });
+  const [loading, setLoading] = useState(false); // ✅ Loading state
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,15 +30,16 @@ const CreateMember = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true); // ✅ Start loading
+    console.log("Submitting:", formData);
     try {
-        const response = await fetch(`${SERVER_URL}/member`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-          });
+      const response = await fetch(`${SERVER_URL}/api/users/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Unknown error');
@@ -48,12 +49,14 @@ const CreateMember = () => {
         firstName: '',
         middleName: '',
         lastName: '',
-        phone: '',
+        phoneNumber: '',
         email: '',
-      
+        password: ''
       });
     } catch (error) {
       setStatus({ message: error.message || 'Something went wrong', type: 'error' });
+    } finally {
+      setLoading(false); // ✅ Stop loading
     }
   };
 
@@ -100,9 +103,9 @@ const CreateMember = () => {
           />
           <TextField
             fullWidth
-            label="Phone"
-            name="phone"
-            value={formData.phone}
+            label="Phone Number"
+            name="phoneNumber"
+            value={formData.phoneNumber}
             onChange={handleChange}
             required
             margin="normal"
@@ -117,10 +120,41 @@ const CreateMember = () => {
             required
             margin="normal"
           />
-        
-          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-            Submit
-          </Button>
+          <TextField
+            fullWidth
+            label="Password"
+            name="password"
+            type="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            margin="normal"
+          />
+
+          <Box sx={{ mt: 2, position: 'relative' }}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              disabled={loading} // ✅ Disable while loading
+            >
+              Submit
+            </Button>
+            {loading && (
+              <CircularProgress
+                size={24}
+                sx={{
+                  color: 'primary.main',
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  marginTop: '-12px',
+                  marginLeft: '-12px',
+                }}
+              />
+            )}
+          </Box>
         </form>
       </Box>
     </Container>
