@@ -1,35 +1,78 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import { useSession } from 'next-auth/react'; // Optional if using next-auth
+import { Button, Avatar, CircularProgress } from '@mui/material';
+import Link from 'next/link';
+import { useSession, signIn, signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const TopAppBar = () => {
-  const { data: session } = useSession(); // Replace with your auth method if not using next-auth
-  const user = session?.user || { name: 'User', image: '/default-avatar.png' }; // Fallback
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const handleLogout = async () => {
+    setLoading(true);
+    await signOut({ redirect: false });
+    router.push('/login');
+    setLoading(false);
+  };
 
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: 'primary.main' }}>
-  <Toolbar>
-    {/* Logo on the left */}
-    <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 'bold', color: 'white' }}>
-      ChamaXpress
-    </Typography>
+    <AppBar
+      position="fixed"
+      sx={{
+        backgroundColor: 'white',
+        border: 1,
+        height: '120px',
+        justifyContent: 'center',
+        px: 2,
+      }}
+    >
+      <Toolbar>
+        <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'red', mr: 4 }}>
+          ChamaXpress
+        </Typography>
 
-    {/* Avatar on the right */}
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <IconButton sx={{ p: 0 }}>
-        <Avatar alt={user.name} src={user.image} />
-      </IconButton>
-    </Box>
-  </Toolbar>
-</AppBar>
+        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', gap: 3 }}>
+          <Button component={Link} href="/" sx={{ color: 'black', fontWeight: '500' }}>
+            Home
+          </Button>
+          <Button component={Link} href="/contributions" sx={{ color: 'black', fontWeight: '500' }}>
+            Contributions
+          </Button>
+          <Button component={Link} href="/" sx={{ color: 'black', fontWeight: '500' }}>
+            Contribute
+          </Button>
+          {session && (
+            <Button component={Link} href="/dashboard" sx={{ color: 'black', fontWeight: '500' }}>
+              Dashboard
+            </Button>
+          )}
+        </Box>
 
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {loading ? (
+            <CircularProgress size={24} />
+          ) : session ? (
+            <>
+              <Avatar src={session.user?.image || '/default-avatar.png'} />
+              <Button onClick={handleLogout} sx={{ color: 'black', fontWeight: '500' }}>
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <Button component={Link} href="/login" sx={{ color: 'black', fontWeight: '500' }}>
+              Sign In
+            </Button>
+          )}
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
 

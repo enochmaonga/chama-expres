@@ -15,6 +15,7 @@ import {
   Paper,
   CircularProgress,
   Grid,
+  Card,
 } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { SERVER_URL } from "@/config";
@@ -114,17 +115,23 @@ const ContributionsPage = () => {
 
   return (
     <Box p={{ xs: 2, md: 4 }}>
-      <Box mb={3}>
+
+
+      <Box mb={3} sx={{ mt: 8 }}>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} sm={6}>
-            <Typography variant="h6" textAlign={{ xs: "center", sm: "left" }}>
+            <Typography variant="h5" textAlign={{ xs: "center", sm: "left" }}>
               Contributions - {currentYear}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Box display="flex" justifyContent={{ xs: "center", sm: "flex-end" }}>
               <FormControl fullWidth sx={{ maxWidth: 200 }}>
-                <InputLabel>Year</InputLabel>
+                <InputLabel>
+                  <Typography>
+                    Year
+                  </Typography>
+                </InputLabel>
                 <Select
                   name="year"
                   value={filters.year}
@@ -148,13 +155,15 @@ const ContributionsPage = () => {
         <Paper sx={{ width: '100%', overflowX: 'auto' }}>
           <Table size="small" sx={{ minWidth: 800 }}>
             <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Member #</TableCell>
+              <TableRow sx={{ backgroundColor: '#f7dabdff' }}> {/* Light gray background */}
+                <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>Member #</TableCell>
                 {monthsList.map(month => (
-                  <TableCell key={month}>{month}</TableCell>
+                  <TableCell key={month} sx={{ fontWeight: 'bold' }}>
+                    {month}
+                  </TableCell>
                 ))}
-                <TableCell><strong>Total</strong></TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>Total</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -183,6 +192,7 @@ const ContributionsPage = () => {
       ) : (
         <Typography textAlign="center" mt={3}>No contributions found.</Typography>
       )}
+
     </Box>
   );
 };

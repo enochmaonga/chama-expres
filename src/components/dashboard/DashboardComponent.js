@@ -8,7 +8,15 @@ import {
   ListItem,
   ListItemText,
   CircularProgress,
+  Card,
+  Button,
 } from "@mui/material";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { GiCash } from "react-icons/gi";
+import { GiExpense } from "react-icons/gi";
+import { MdAccountBalance } from "react-icons/md";
+import { CiCirclePlus } from "react-icons/ci";
+import Link from "next/link";
 
 const DashboardComponent = () => {
   const [stats, setStats] = useState({
@@ -16,90 +24,112 @@ const DashboardComponent = () => {
     totalContributions: 0,
     balance: 0,
   });
-  const [recentActivities, setRecentActivities] = useState([]);
-  const [upcomingEvents, setUpcomingEvents] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
-//   useEffect(() => {
-//     const fetchDashboardData = async () => {
-//       try {
-//         const [statsRes, activityRes, eventsRes] = await Promise.all([
-//           fetch("/api/dashboard/stats").then(res => res.json()),
-//           fetch("/api/dashboard/recent-activities").then(res => res.json()),
-//           fetch("/api/dashboard/upcoming-events").then(res => res.json()),
-//         ]);
-//         setStats(statsRes);
-//         setRecentActivities(activityRes);
-//         setUpcomingEvents(eventsRes);
-//       } catch (error) {
-//         console.error("Failed to fetch dashboard data:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
+  //   useEffect(() => {
+  //     const fetchDashboardData = async () => {
+  //       try {
+  //         const [statsRes, activityRes, eventsRes] = await Promise.all([
+  //           fetch("/api/dashboard/stats").then(res => res.json()),
+  //           fetch("/api/dashboard/recent-activities").then(res => res.json()),
+  //           fetch("/api/dashboard/upcoming-events").then(res => res.json()),
+  //         ]);
+  //         setStats(statsRes);
+  //         setRecentActivities(activityRes);
+  //         setUpcomingEvents(eventsRes);
+  //       } catch (error) {
+  //         console.error("Failed to fetch dashboard data:", error);
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     };
 
-//     fetchDashboardData();
-//   }, []);
+  //     fetchDashboardData();
+  //   }, []);
 
-//   if (loading) return <CircularProgress />;
+  //   if (loading) return <CircularProgress />;
 
   return (
-    <Box p={4}>
-      <Typography variant="h4" gutterBottom>
-        Dashboard Overview
-      </Typography>
+    <Box p={4} >
 
-<Grid container spacing={3} sx={{ width: '100%', margin: 0 }}>
-  <Grid item xs={12} md={4}>
-    <Paper elevation={3} sx={{ p: 2, width: '100%' }}>
-      <Typography variant="h6">Active Members</Typography>
-      <Typography variant="h4">{stats.activeMembers}</Typography>
-    </Paper>
-  </Grid>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%',
+          p: 2,
+          mt: 8
 
-  <Grid item xs={12} md={4}>
-    <Paper elevation={3} sx={{ p: 2, width: '100%' }}>
-      <Typography variant="h6">Total Contributions</Typography>
-      <Typography variant="h4">${stats.totalContributions}</Typography>
-    </Paper>
-  </Grid>
-
-  <Grid item xs={12} md={4}>
-    <Paper elevation={3} sx={{ p: 2, width: '100%' }}>
-      <Typography variant="h6">Balance</Typography>
-      <Typography variant="h4">${stats.balance}</Typography>
-    </Paper>
-  </Grid>
-</Grid>
-
-    <Grid container spacing={3} mt={3}>
+        }}
+      >
         <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 2 }}>
-            <Typography variant="h6">Recent Activities</Typography>
-            <List dense>
-              {recentActivities.map((activity, i) => (
-                <ListItem key={i}>
-                  <ListItemText primary={activity.description} secondary={activity.date} />
-                </ListItem>
-              ))}
-            </List>
-          </Paper>
+          <Typography variant="h4" gutterBottom>
+            Admin Dashboard
+          </Typography>
         </Grid>
-
         <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 2 }}>
-            <Typography variant="h6">Upcoming Events</Typography>
-            <List dense>
-              {upcomingEvents.map((event, i) => (
-                <ListItem key={i}>
-                  <ListItemText primary={event.name} secondary={event.date} />
-                </ListItem>
-              ))}
-            </List>
-          </Paper>
+          <Box >
+            <Button component={Link} href="/new-member" variant="contained"
+              sx={{ borderRadius: 8, p: 2, width: '300px', textTransform: "none", fontSize: '1.5rem' }}>
+              <CiCirclePlus size={34} style={{ marginRight: 12 }} />
+              Add Member
+            </Button>
+          </Box>
         </Grid>
-      </Grid>
+      </Box>
+
+
+      <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        <Grid
+          container
+          spacing={3}
+          justifyContent="center"
+          sx={{ margin: '0 auto', mt: 4 }}
+        >
+          <Grid item xs={12} sm={6} md={3}>
+            <Card elevation={3} sx={{ p: 2, borderRadius: 4 }}>
+              <Typography variant="h4">
+                <FaPeopleGroup style={{ color: '#1976d2', marginRight: 8 }} /> Active Members
+              </Typography>
+              <Typography variant="h4">{stats.activeMembers}</Typography>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <Card elevation={3} sx={{ p: 2, borderRadius: 4 }}>
+              <Typography variant="h4">
+                <GiCash style={{ color: '#fc6005ff', marginRight: 8 }} /> Total Contributions
+              </Typography>
+              <Typography variant="h4">${stats.totalContributions}</Typography>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <Card elevation={3} sx={{ p: 2, borderRadius: 4 }}>
+              <Typography variant="h4">
+                <GiExpense style={{ color: '#ec4fa6ff', marginRight: 8 }} /> Total Expenses
+              </Typography>
+              <Typography variant="h4">${stats.totalExpenses}</Typography>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <Card elevation={3} sx={{ p: 2, borderRadius: 4 }}>
+              <Typography variant="h4">
+                <MdAccountBalance style={{ color: '#2610e7ff', marginRight: 8 }} /> Balance
+              </Typography>
+              <Typography variant="h4">${stats.balance}</Typography>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
+
+
+      
     </Box>
+
   );
 };
 

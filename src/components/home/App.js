@@ -96,10 +96,10 @@ function CashCollectionForm() {
   return (
     <div className="min-h-screen flex items-center justify-center ">
       <Box sx={{ maxWidth: 400, margin: "auto", padding: 2, mt: 10 }}>
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="h4" gutterBottom sx={{mt:8}}>
           Cash Collection Form
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="h5" color="text.secondary">
           Please fill in the details below:
         </Typography>
       </Box>
@@ -110,7 +110,7 @@ function CashCollectionForm() {
 
       <form onSubmit={handleSubmit}>
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <Grid container direction="column" spacing={2} sx={{ width: "100%", maxWidth: 400, mt: 2 }}>
+          <Grid container direction="column" spacing={2} sx={{ width: "100%", maxWidth: "50%", mt: 2 }}>
             <Grid item xs={12}>
               <TextField
                 label="Phone Number"

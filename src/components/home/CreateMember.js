@@ -61,9 +61,9 @@ const CreateMember = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box mt={4}>
-        <Typography variant="h5" gutterBottom>
+    <Container maxWidth="md" >
+      <Box mt={20}>
+        <Typography variant="h4" gutterBottom >
           Create New Member
         </Typography>
 

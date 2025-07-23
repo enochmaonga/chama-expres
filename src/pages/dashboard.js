@@ -1,29 +1,32 @@
-// // pages/dashboard.js
-// import { getSession } from "next-auth/react";
+// pages/index.js (or app/page.jsx)
+import React from 'react';
+import { useSession, signIn } from 'next-auth/react';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from '@/styles/theme';
+import DashboardComponent from '@/components/dashboard/DashboardComponent';
 
-// export default function DashboardPage({ user }) {
-//   return (
-//     <div>
-//       <h1>Welcome {user.email}</h1>
-//     </div>
-//   );
-// }
+function Dashboard() {
+  const { data: session, status } = useSession();
+  const loading = status === 'loading';
 
-// export async function getServerSideProps(context) {
-//   const session = await getSession(context);
+  if (loading) {
+    // You can show a loading spinner here while session is loading
+    return <div>Loading...</div>;
+  }
 
-//   if (!session) {
-//     return {
-//       // redirect: {
-//       //   destination: "/login",
-//       //   permanent: false,
-//       // },
-//     };
-//   }
+  if (!session) {
+    // Not signed in - redirect to login page
+    signIn(); // this will redirect to your /login page (because of your NextAuth config)
+    return null; // or a placeholder
+  }
 
-//   return {
-//     props: {
-//       user: session.user,
-//     },
-//   };
-// }
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <DashboardComponent />
+    </ThemeProvider>
+  );
+}
+
+export default Dashboard;
