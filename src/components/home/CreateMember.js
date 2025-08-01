@@ -6,7 +6,8 @@ import {
   TextField,
   Typography,
   Alert,
-  CircularProgress, // ✅ Import here
+  CircularProgress,
+  MenuItem, // ✅ Import here
 } from '@mui/material';
 import { SERVER_URL } from '@/config';
 
@@ -17,8 +18,9 @@ const CreateMember = () => {
     lastName: '',
     phoneNumber: '',
     email: '',
-    password: ''
+    userType: 'user', // default value
   });
+
 
   const [status, setStatus] = useState({ message: '', type: '' });
   const [loading, setLoading] = useState(false); // ✅ Loading state
@@ -33,7 +35,7 @@ const CreateMember = () => {
     setLoading(true); // ✅ Start loading
     console.log("Submitting:", formData);
     try {
-      const response = await fetch(`${SERVER_URL}/api/users/register`, {
+      const response = await fetch(`${SERVER_URL}/api/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +53,7 @@ const CreateMember = () => {
         lastName: '',
         phoneNumber: '',
         email: '',
-        password: ''
+        // password: ''
       });
     } catch (error) {
       setStatus({ message: error.message || 'Something went wrong', type: 'error' });
@@ -101,15 +103,7 @@ const CreateMember = () => {
             required
             margin="normal"
           />
-          <TextField
-            fullWidth
-            label="Phone Number"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            required
-            margin="normal"
-          />
+
           <TextField
             fullWidth
             label="Email"
@@ -122,14 +116,28 @@ const CreateMember = () => {
           />
           <TextField
             fullWidth
-            label="Password"
-            name="password"
-            type="password"
-            value={formData.password}
+            label="Phone Number"
+            name="phoneNumber"
+            type="phoneNumber"
+            value={formData.phoneNumber}
             onChange={handleChange}
             required
             margin="normal"
           />
+          <TextField
+            fullWidth
+            select
+            label="User Type"
+            name="userType"
+            value={formData.userType}
+            onChange={handleChange}
+            required
+            margin="normal"
+          >
+            <MenuItem value="user">User</MenuItem>
+            <MenuItem value="admin">Admin</MenuItem>
+          </TextField>
+
 
           <Box sx={{ mt: 2, position: 'relative' }}>
             <Button

@@ -17,9 +17,7 @@ const TopAppBar = () => {
 
   const handleLogout = async () => {
     setLoading(true);
-    await signOut({ redirect: false });
-    router.push('/login');
-    setLoading(false);
+    await signOut({ callbackUrl: '/' }); // ✅ This ensures a clean redirect
   };
 
   return (
@@ -45,10 +43,8 @@ const TopAppBar = () => {
           <Button component={Link} href="/contributions" sx={{ color: 'black', fontWeight: '500' }}>
             Contributions
           </Button>
-          <Button component={Link} href="/" sx={{ color: 'black', fontWeight: '500' }}>
-            Contribute
-          </Button>
-          {session && (
+
+          {session && session.user?.userType === 'admin' && (
             <Button component={Link} href="/dashboard" sx={{ color: 'black', fontWeight: '500' }}>
               Dashboard
             </Button>

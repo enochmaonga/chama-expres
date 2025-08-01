@@ -17,7 +17,6 @@ import {
   Grid,
   Card,
 } from "@mui/material";
-import { useSession } from "next-auth/react";
 import { SERVER_URL } from "@/config";
 
 const monthsList = [
@@ -26,7 +25,7 @@ const monthsList = [
 ];
 
 const ContributionsPage = () => {
-  const { data: session } = useSession();
+
   const [contributions, setContributions] = useState([]);
   const [loading, setLoading] = useState(false);
   const currentYear = new Date().getFullYear();

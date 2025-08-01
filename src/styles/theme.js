@@ -6,6 +6,9 @@ const theme = createTheme({
       main: '#1a237e',
     },
   },
+  typography: {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif', // Default font
+  },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
@@ -13,6 +16,7 @@ const theme = createTheme({
           position: 'relative',
           minHeight: '100vh',
           margin: 0,
+          fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif', // Apply globally as a fallback
           '&::before': {
             content: '""',
             position: 'fixed',
@@ -20,11 +24,11 @@ const theme = createTheme({
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundImage: 'url("/images/chama-save.png")', // update path as needed
+            backgroundImage: 'url("/images/chama-save.png")',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            opacity: 0.1, // adjust this value for desired transparency
+            opacity: 0.1,
             zIndex: -1,
           },
         },

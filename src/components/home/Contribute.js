@@ -38,7 +38,7 @@ function CashCollectionForm() {
     if (!formData.phoneNumber) return;
 
     try {
-      const res = await fetch(`${SERVER_URL}/api/users/by-phone/${formData.phoneNumber}`);
+      const res = await fetch(`${SERVER_URL}/api/by-phone/${formData.phoneNumber}`);
       const data = await res.json();
 
       if (res.ok) {

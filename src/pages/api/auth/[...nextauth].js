@@ -21,20 +21,22 @@ export default NextAuth({
           });
 
           const data = await res.json();
-          console.log('API Response:', data);
 
           if (res.ok && data.success && data.user) {
-            return data.user; // Success
-          } else {
-            console.warn('Login failed:', data.message);
-            return null;
+            return {
+              id: data.user.id,
+              name: data.user.name,
+              email: data.user.email,
+              userType: data.user.userType // Include this
+            };
           }
+
+          return null;
         } catch (err) {
           console.error('Auth Error:', err.message);
           return null;
         }
       }
-
     })
   ],
   session: {
@@ -42,7 +44,9 @@ export default NextAuth({
   },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.user = user;
+      if (user) {
+        token.user = user;
+      }
       return token;
     },
     async session({ session, token }) {

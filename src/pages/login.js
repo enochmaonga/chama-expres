@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import {
   Container, TextField, Button, Typography, Box, Alert, CircularProgress
 } from '@mui/material';
+import { getSession } from 'next-auth/react';
+import Link from 'next/link';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -13,24 +15,31 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false); // NEW
 
   const handleLogin = async () => {
-    setLoading(true); // Start loading
-    setError('');     // Clear previous error
+    setLoading(true);
+    setError('');
 
     const res = await signIn('credentials', {
       redirect: false,
       email,
-      password
+      password,
     });
 
-    setLoading(false); // Stop loading
+    setLoading(false);
 
     if (res.ok && !res.error) {
-      router.push('/dashboard');
+      const session = await getSession(); // get the session
+
+      const userType = session?.user?.userType; // assuming userType is set on session.user
+
+      if (userType === 'admin') {
+        router.push('/dashboard');
+      } else {
+        router.push('/contributions');
+      }
     } else {
       setError('Invalid credentials');
     }
   };
-
   return (
     <Container maxWidth="sm">
       <Box
@@ -81,7 +90,14 @@ const LoginPage = () => {
               />
             )}
           </Box>
+          <Box sx={{ mt: 2, position: 'relative' }}>
+          <Typography variant="body2" sx={{ mt: 2 }}>
+          <Link href="/forgot-password">Forgot your password?</Link>
+        </Typography>
+          </Box>
+          
         </Box>
+       
       </Box>
     </Container>
   );
