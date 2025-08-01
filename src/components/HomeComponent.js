@@ -13,7 +13,7 @@ const HomeComponent = () => {
         <Container sx={{ color: "#616161" }}>
             <Box mt={20}>
                 <Typography variant="h2" gutterBottom style={{ fontWeight: "bold", color: "#00796b" }}>
-                    Welcome to ChamaXpress – Your Group’s Trusted Fund Management Platform
+                    Welcome to ChamaXpress &ndash; Your Group&rsquo;s Trusted Fund Management Platform
                 </Typography>
 
 
@@ -21,7 +21,7 @@ const HomeComponent = () => {
                     Empowering Transparency, Accountability, and Unity
                 </Typography>
                 <Typography variant='h4'>
-                    Welcome to your group’s central hub for secure fund collection, easy record-keeping, and real-time updates. Our platform is designed to help you manage your contributions, track member payments, and generate accurate reports — all in one place.
+                    Welcome to your group&apos;s central hub for secure fund collection, easy record-keeping, and real-time updates. Our platform is designed to help you manage your contributions, track member payments, and generate accurate reports — all in one place.
                 </Typography>
                 <Typography variant='h4'>
                     <ul>
