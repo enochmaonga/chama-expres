@@ -15,6 +15,8 @@ import Link from "next/link";
 import { SERVER_URL } from "@/config";
 import Users from "@/pages/users";
 
+const backendUrl = process.env.NEXT_PUBLIC_API_URL; 
+
 const DashboardComponent = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,7 +24,7 @@ const DashboardComponent = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const res = await fetch(`${SERVER_URL}/api/dashboard/stats`);
+        const res = await fetch(`${backendUrl}/api/dashboard/stats`);
         const data = await res.json();
         setStats(data);
       } catch (error) {
