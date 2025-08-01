@@ -18,6 +18,8 @@ const months = [
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
 
+const backendUrl = process.env.NEXT_PUBLIC_API_URL; 
+
 function CashCollectionForm() {
   const [formData, setFormData] = useState({
     phoneNumber: "",
@@ -38,7 +40,7 @@ function CashCollectionForm() {
     if (!formData.phoneNumber) return;
 
     try {
-      const res = await fetch(`${SERVER_URL}/api/by-phone/${formData.phoneNumber}`);
+      const res = await fetch(`${backendUrl}/api/by-phone/${formData.phoneNumber}`);
       const data = await res.json();
 
       if (res.ok) {
@@ -62,7 +64,7 @@ function CashCollectionForm() {
     console.log("Form submitted:", formData);
 
     try {
-      const response = await fetch(`${SERVER_URL}/api/contributions`, {
+      const response = await fetch(`${backendUrl}/api/contributions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

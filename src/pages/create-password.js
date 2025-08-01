@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import { Box, Button, Container, TextField, Typography, Alert } from '@mui/material';
 import { SERVER_URL } from '@/config';
 
+const backendUrl = process.env.NEXT_PUBLIC_API_URL; 
+
 const CreatePassword = () => {
   const router = useRouter();
   const { token } = router.query;
@@ -19,7 +21,7 @@ const CreatePassword = () => {
     }
 
     try {
-      const res = await fetch(`${SERVER_URL}/api/set-password`, {
+      const res = await fetch(`${backendUrl}/api/set-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, password }),

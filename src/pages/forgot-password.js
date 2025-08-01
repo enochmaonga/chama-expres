@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Box, Button, Container, TextField, Typography, Alert } from '@mui/material';
 import { SERVER_URL } from '@/config';
 
+const backendUrl = process.env.NEXT_PUBLIC_API_URL; 
+
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState({ message: '', type: '' });
@@ -10,7 +12,7 @@ const ForgotPassword = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`${SERVER_URL}/api/reset-password`, {
+      const res = await fetch(`${backendUrl}/api/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

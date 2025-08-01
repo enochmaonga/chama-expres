@@ -11,6 +11,8 @@ import {
 } from '@mui/material';
 import { SERVER_URL } from '@/config';
 
+const backendUrl = process.env.NEXT_PUBLIC_API_URL; 
+
 const CreateMember = () => {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -35,7 +37,7 @@ const CreateMember = () => {
     setLoading(true); // ✅ Start loading
     console.log("Submitting:", formData);
     try {
-      const response = await fetch(`${SERVER_URL}/api/register`, {
+      const response = await fetch(`${backendUrl}/api/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -9,7 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { SERVER_URL } from '@/config';
 
-
+const backendUrl = process.env.NEXT_PUBLIC_API_URL; 
 // Define columns
 const columns = [
     { id: 'name', label: 'Name', minWidth: 170 },
@@ -27,7 +27,7 @@ function Users() {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const res = await fetch(`${SERVER_URL}/api/users`);
+                const res = await fetch(`${backendUrl}/api/users`);
                 const data = await res.json();
 
                 // Concatenate names into a single 'name' field

@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import { Box, Button, Container, TextField, Typography, Alert } from '@mui/material';
 import { SERVER_URL } from '@/config';
 
+const backendUrl = process.env.NEXT_PUBLIC_API_URL; 
+
 const ResetPassword = () => {
   const router = useRouter();
   const { token } = router.query;
@@ -20,7 +22,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const res = await fetch(`${SERVER_URL}/api/reset-password/${token}`, {
+      const res = await fetch(`${backendUrl}/api/reset-password/${token}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),

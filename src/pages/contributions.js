@@ -24,6 +24,8 @@ const monthsList = [
   "July", "August", "September", "October", "November", "December"
 ];
 
+ const backendUrl = process.env.NEXT_PUBLIC_API_URL; 
+
 const ContributionsPage = () => {
 
   const [contributions, setContributions] = useState([]);
@@ -45,7 +47,7 @@ const ContributionsPage = () => {
       if (filters.year) params.append("year", filters.year);
       if (filters.memberNumber) params.append("memberNumber", filters.memberNumber);
 
-      const res = await fetch(`${SERVER_URL}/api/contributions?${params.toString()}`);
+      const res = await fetch(`${backendUrl}/api/contributions?${params.toString()}`);
       const result = await res.json();
 
       if (res.ok) {
