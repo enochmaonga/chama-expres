@@ -40,9 +40,9 @@ const HomeComponent = () => {
                     </ul>
                 </Typography>
                 <Typography variant='h4'>
-                    Whether you're collecting monthly dues, fundraising for a cause, or managing welfare contributions — ChamaXpress is here to make every shilling count.
+                    Whether you&apos;re collecting monthly dues, fundraising for a cause, or managing welfare contributions — ChamaXpress is here to make every shilling count.
 
-                    <span style={{ fontStyle: 'italic' }}>“Together, we grow stronger.”</span>
+                    <span style={{ fontStyle: 'italic' }}>&apos;Together, we grow stronger.&apos;</span>
                 </Typography>
             </Box>
         </Container>
