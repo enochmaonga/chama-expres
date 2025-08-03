@@ -22,7 +22,7 @@ const HomeComponent = () => {
                                 fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" }
                             }}
                         >
-                            Welcome to ChamaXpress: Your Group&apos;s Trusted Fund Management Platform
+                            Welcome to ChamaXpress: Your Group's Trusted Fund Management Platform
                         </Typography>
                     </Grid>
 
@@ -41,7 +41,7 @@ const HomeComponent = () => {
                             variant='h5'
                             sx={{ fontSize: { xs: "1.1rem", sm: "1.25rem" } }}
                         >
-                            Welcome to your group&apos;s central hub for secure fund collection, easy record-keeping, and real-time updates. Our platform is designed to help you manage your contributions, track member payments, and generate accurate reports — all in one place.
+                            Welcome to your group's central hub for secure fund collection, easy record-keeping, and real-time updates. Our platform is designed to help you manage your contributions, track member payments, and generate accurate reports — all in one place.
                         </Typography>
                     </Grid>
 
@@ -67,7 +67,7 @@ const HomeComponent = () => {
                             variant='h5'
                             sx={{ fontSize: { xs: "1.1rem", sm: "1.25rem" } }}
                         >
-                            Whether you&apos;re collecting monthly dues, fundraising for a cause, or managing welfare contributions — ChamaXpress is here to make every shilling count.
+                            Whether you are collecting monthly dues, fundraising for a cause, or managing welfare contributions — ChamaXpress is here to make every shilling count.
                             <br />
                             <span style={{ fontStyle: 'italic' }}>
                                 'Together, we grow stronger.'
