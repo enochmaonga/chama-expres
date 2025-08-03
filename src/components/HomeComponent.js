@@ -70,7 +70,7 @@ const HomeComponent = () => {
                             Whether you are collecting monthly dues, fundraising for a cause, or managing welfare contributions — ChamaXpress is here to make every shilling count.
                             <br />
                             <span style={{ fontStyle: "italic" }}>
-                              "&#39;Together, we grow stronger.&#39;"
+                               {"'Together, we grow stronger.'"}
                             </span>
                         </Typography>
                     </Grid>
