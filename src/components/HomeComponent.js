@@ -22,7 +22,7 @@ const HomeComponent = () => {
                                 fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" }
                             }}
                         >
-                            Welcome to ChamaXpress – Your Group’s Trusted Fund Management Platform
+                            Welcome to ChamaXpress: Your Group&apos;s Trusted Fund Management Platform
                         </Typography>
                     </Grid>
 
