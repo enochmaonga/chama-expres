@@ -5,70 +5,144 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Button, Avatar, CircularProgress } from '@mui/material';
+import { Button, Avatar, CircularProgress, IconButton, Drawer, List, ListItem, ListItemText } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import Link from 'next/link';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const TopAppBar = () => {
   const { data: session, status } = useSession();
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const router = useRouter();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleLogout = async () => {
     setLoading(true);
-    await signOut({ callbackUrl: '/' }); // ✅ This ensures a clean redirect
+    await signOut({ callbackUrl: '/' });
   };
 
+  const navLinks = [
+    { label: 'Home', href: '/' },
+    { label: 'Contributions', href: '/contributions' },
+    ...(session?.user?.userType === 'admin' ? [{ label: 'Dashboard', href: '/dashboard' }] : []),
+  ];
+
   return (
-    <AppBar
-      position="fixed"
-      sx={{
-        backgroundColor: 'white',
-        border: 1,
-        height: '120px',
-        justifyContent: 'center',
-        px: 2,
-      }}
-    >
-      <Toolbar>
-        <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'red', mr: 4 }}>
-          ChamaXpress
-        </Typography>
+    <>
+      <AppBar
+        position="fixed"
+        sx={{
+          backgroundColor: 'white',
+          borderBottom: 1,
+          borderColor: 'divider',
+          height: 'auto',
+          px: 2,
+          py: 1,
+        }}
+        elevation={0}
+      >
+        <Toolbar
+          sx={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: isMobile ? 'flex-start' : 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+            gap: isMobile ? 1 : 0,
+          }}
+        >
+          {/* Logo & mobile menu */}
+          <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="h5" sx={{ fontWeight: 'bold', color: 'red' }}>
+              ChamaXpress
+            </Typography>
+            {isMobile && (
+              <IconButton onClick={() => setDrawerOpen(true)}>
+                <MenuIcon />
+              </IconButton>
+            )}
+          </Box>
 
-        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', gap: 3 }}>
-          <Button component={Link} href="/" sx={{ color: 'black', fontWeight: '500' }}>
-            Home
-          </Button>
-          <Button component={Link} href="/contributions" sx={{ color: 'black', fontWeight: '500' }}>
-            Contributions
-          </Button>
-
-          {session && session.user?.userType === 'admin' && (
-            <Button component={Link} href="/dashboard" sx={{ color: 'black', fontWeight: '500' }}>
-              Dashboard
-            </Button>
+          {/* Desktop Nav Links */}
+          {!isMobile && (
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 3,
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%'
+              }}
+            >
+              {navLinks.map((link) => (
+                <Button
+                  key={link.label}
+                  component={Link}
+                  href={link.href}
+                  sx={{ color: 'black', fontWeight: 500, textTransform: 'none' }}
+                >
+                  {link.label}
+                </Button>
+              ))}
+            </Box>
           )}
-        </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          {loading ? (
-            <CircularProgress size={24} />
-          ) : session ? (
-            <>
-              <Avatar src={session.user?.image || '/default-avatar.png'} />
-              <Button onClick={handleLogout} sx={{ color: 'black', fontWeight: '500' }}>
-                Sign Out
-              </Button>
-            </>
-          ) : (
-            <Button component={Link} href="/login" sx={{ color: 'black', fontWeight: '500' }}>
-              Sign In
-            </Button>
+
+          {/* Auth */}
+          {!isMobile && (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              {loading ? (
+                <CircularProgress size={24} />
+              ) : session ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Avatar src={session.user?.image || '/default-avatar.png'} sx={{ width: 32, height: 32 }} />
+                  <Button onClick={handleLogout} sx={{ color: 'black', fontWeight: 500, textTransform: 'none' }}>
+                    Sign Out
+                  </Button>
+                </Box>
+              ) : (
+                <Button component={Link} href="/login" sx={{ color: 'black', fontWeight: 500, textTransform: 'none' }}>
+                  Sign In
+                </Button>
+              )}
+            </Box>
+
           )}
+        </Toolbar>
+      </AppBar>
+
+      {/* Mobile Drawer */}
+      <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+        <Box sx={{ width: 250, mt: 2 }}>
+          <List>
+            {navLinks.map((link) => (
+              <ListItem button component={Link} href={link.href} key={link.label} onClick={() => setDrawerOpen(false)}>
+                <ListItemText primary={link.label} />
+              </ListItem>
+            ))}
+            <ListItem>
+              {loading ? (
+                <CircularProgress size={24} />
+              ) : session ? (
+                <Button onClick={handleLogout} sx={{ textTransform: 'none' }}>
+                  Sign Out
+                </Button>
+              ) : (
+                <Button component={Link} href="/login" sx={{ textTransform: 'none' }} onClick={() => setDrawerOpen(false)}>
+                  Sign In
+                </Button>
+              )}
+            </ListItem>
+          </List>
         </Box>
-      </Toolbar>
-    </AppBar>
+      </Drawer>
+    </>
   );
 };
 

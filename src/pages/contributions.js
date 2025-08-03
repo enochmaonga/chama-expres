@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import { SERVER_URL } from "@/config";
 
+
 const monthsList = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -116,85 +117,97 @@ const ContributionsPage = () => {
 
   return (
     <Box p={{ xs: 2, md: 4 }}>
+  <Box mb={3} sx={{ mt: 8 }}>
+    <Grid container spacing={2}>
+      {/* Heading */}
+      <Grid item xs={12} sm={4}>
+        <Typography variant="h5" textAlign={{ xs: "center", sm: "left" }}>
+          Contributions - {currentYear}
+        </Typography>
+      </Grid>
 
+      {/* Year Filter */}
+      <Grid item xs={12} sm={4}>
+        <FormControl fullWidth>
+          <InputLabel>Year</InputLabel>
+          <Select
+            name="year"
+            value={filters.year}
+            onChange={handleFilterChange}
+            label="Year"
+          >
+            {[...Array(10)].map((_, i) => {
+              const year = currentYear - i;
+              return <MenuItem key={year} value={year}>{year}</MenuItem>;
+            })}
+          </Select>
+        </FormControl>
+      </Grid>
 
-      <Box mb={3} sx={{ mt: 8 }}>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h5" textAlign={{ xs: "center", sm: "left" }}>
-              Contributions - {currentYear}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Box display="flex" justifyContent={{ xs: "center", sm: "flex-end" }}>
-              <FormControl fullWidth sx={{ maxWidth: 200 }}>
-                <InputLabel>
-                  <Typography>
-                    Year
-                  </Typography>
-                </InputLabel>
-                <Select
-                  name="year"
-                  value={filters.year}
-                  onChange={handleFilterChange}
-                  label="Year"
-                >
-                  {[...Array(10)].map((_, i) => {
-                    const year = currentYear - i;
-                    return <MenuItem key={year} value={year}>{year}</MenuItem>;
-                  })}
-                </Select>
-              </FormControl>
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
+      {/* Member Number Filter */}
+      <Grid item xs={12} sm={4}>
+        <TextField
+          name="memberNumber"
+          value={filters.memberNumber}
+          onChange={handleFilterChange}
+          label="Member #"
+          fullWidth
+        />
+      </Grid>
+    </Grid>
+  </Box>
 
-      {loading ? (
-        <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>
-      ) : contributorRows.length > 0 ? (
-        <Paper sx={{ width: '100%', overflowX: 'auto' }}>
-          <Table size="small" sx={{ minWidth: 800 }}>
-            <TableHead>
-              <TableRow sx={{ backgroundColor: '#f7dabdff' }}> {/* Light gray background */}
-                <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Member #</TableCell>
-                {monthsList.map(month => (
-                  <TableCell key={month} sx={{ fontWeight: 'bold' }}>
-                    {month}
-                  </TableCell>
-                ))}
-                <TableCell sx={{ fontWeight: 'bold' }}>Total</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {contributorRows.map((contributor, i) => (
-                <TableRow key={i}>
-                  <TableCell>{contributor.name}</TableCell>
-                  <TableCell>{contributor.memberNumber}</TableCell>
-                  {monthsList.map(month => (
-                    <TableCell key={month}>
-                      {contributor.monthly[month] || 0}
-                    </TableCell>
-                  ))}
-                  <TableCell><strong>{contributor.rowTotal}</strong></TableCell>
-                </TableRow>
+  {/* Table Section */}
+  {loading ? (
+    <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>
+  ) : contributorRows.length > 0 ? (
+    <Paper sx={{
+      width: '100%',
+      overflowX: 'auto',
+      mt: 2,
+      maxHeight: '70vh'
+    }}>
+      <Table size="small" sx={{ minWidth: 800 }}>
+        <TableHead>
+          <TableRow sx={{ backgroundColor: '#f7dabdff' }}>
+            <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Member #</TableCell>
+            {monthsList.map(month => (
+              <TableCell key={month} sx={{ fontWeight: 'bold' }}>
+                {month}
+              </TableCell>
+            ))}
+            <TableCell sx={{ fontWeight: 'bold' }}>Total</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {contributorRows.map((contributor, i) => (
+            <TableRow key={i}>
+              <TableCell>{contributor.name}</TableCell>
+              <TableCell>{contributor.memberNumber}</TableCell>
+              {monthsList.map(month => (
+                <TableCell key={month}>
+                  {contributor.monthly[month] || 0}
+                </TableCell>
               ))}
-              <TableRow>
-                <TableCell colSpan={2}><strong>Monthly Totals</strong></TableCell>
-                {monthsList.map(month => (
-                  <TableCell key={month}><strong>{monthTotals[month]}</strong></TableCell>
-                ))}
-                <TableCell><strong>{totalRowSum}</strong></TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </Paper>
-      ) : (
-        <Typography textAlign="center" mt={3}>No contributions found.</Typography>
-      )}
+              <TableCell><strong>{contributor.rowTotal}</strong></TableCell>
+            </TableRow>
+          ))}
+          <TableRow>
+            <TableCell colSpan={2}><strong>Monthly Totals</strong></TableCell>
+            {monthsList.map(month => (
+              <TableCell key={month}><strong>{monthTotals[month]}</strong></TableCell>
+            ))}
+            <TableCell><strong>{totalRowSum}</strong></TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </Paper>
+  ) : (
+    <Typography textAlign="center" mt={3}>No contributions found.</Typography>
+  )}
+</Box>
 
-    </Box>
   );
 };
 
