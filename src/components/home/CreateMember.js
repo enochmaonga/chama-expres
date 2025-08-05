@@ -55,7 +55,7 @@ const CreateMember = () => {
         lastName: '',
         phoneNumber: '',
         email: '',
-        // password: ''
+       
       });
     } catch (error) {
       setStatus({ message: error.message || 'Something went wrong', type: 'error' });
