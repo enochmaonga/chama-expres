@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   TextField,
   Button,
@@ -6,6 +6,7 @@ import {
   Typography,
   Grid,
   Box,
+  Autocomplete,
 } from "@mui/material";
 import { SERVER_URL } from "@/config";
 import TopAppBar from "./Topbar";
@@ -21,6 +22,8 @@ const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
 const backendUrl = process.env.NEXT_PUBLIC_API_URL;
 
 function CashCollectionForm() {
+  const [nameOptions, setNameOptions] = useState([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [formData, setFormData] = useState({
     phoneNumber: "", // optional
     firstName: "",
@@ -37,45 +40,51 @@ function CashCollectionForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleNameBlur = async () => {
-    const { firstName, lastName } = formData;
+  const searchTimeoutRef = useRef(null);
 
-    if (!firstName && !lastName) return;
+  const handleFirstNameInputChange = (event, newInputValue) => {
+    setFormData((prev) => ({ ...prev, firstName: newInputValue }));
 
-    try {
-      const query = new URLSearchParams();
-      if (firstName) query.append("firstName", firstName);
-      if (lastName) query.append("lastName", lastName);
-
-      const res = await fetch(`${backendUrl}/api/by-name?${query.toString()}`);
-      const data = await res.json();
-
-      if (res.ok) {
-        if (data.length === 1) {
-          const member = data[0]; // Assuming it's the matched user object
-
-          setFormData((prev) => ({
-            ...prev,
-            firstName: member.firstName || prev.firstName,
-            lastName: member.lastName || prev.lastName,
-            memberNumber: member.memberNumber || "",
-            phoneNumber: member.phoneNumber || "",
-          }));
-        } else if (data.length > 1) {
-          alert("Multiple users found. Please refine your name input.");
-          console.table(data); // For developer visibility
-        } else {
-          alert("No user found with the given name.");
-        }
-      } else {
-        alert(data.error || "User not found.");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Failed to fetch user data.");
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
     }
+
+    if (newInputValue.length < 2) {
+      setNameOptions([]);
+      return;
+    }
+
+    searchTimeoutRef.current = setTimeout(async () => {
+      setLoadingSuggestions(true);
+      try {
+        const res = await fetch(`${backendUrl}/api/by-name?firstName=${newInputValue}`);
+        const data = await res.json();
+        if (res.ok) {
+          setNameOptions(data);
+        } else {
+          setNameOptions([]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch suggestions:", err);
+        setNameOptions([]);
+      } finally {
+        setLoadingSuggestions(false);
+      }
+    }, 400); // debounce delay
   };
 
+
+  const handleNameSelect = (event, selectedOption) => {
+    if (selectedOption) {
+      setFormData((prev) => ({
+        ...prev,
+        firstName: selectedOption.firstName || "",
+        lastName: selectedOption.lastName || "",
+        memberNumber: selectedOption.memberNumber || "",
+        phoneNumber: selectedOption.phoneNumber || "",
+      }));
+    }
+  };
 
 
   const handleSubmit = async (e) => {
@@ -135,23 +144,37 @@ function CashCollectionForm() {
 
 
             <Grid item xs={12}>
-              <TextField
-                label="First Name"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                onBlur={handleNameBlur}
-                fullWidth
-                required
+              <Autocomplete
+                freeSolo={false}
+                options={nameOptions}
+                getOptionLabel={(option) =>
+                  typeof option === "string"
+                    ? option
+                    : `${option.firstName} ${option.lastName} (${option.memberNumber})`
+                }
+                isOptionEqualToValue={(option, value) => option.memberNumber === value.memberNumber}
+                onInputChange={handleFirstNameInputChange}
+                onChange={handleNameSelect}
+                loading={loadingSuggestions}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Search Member"
+                    fullWidth
+                    required
+                  />
+                )}
               />
+
+
             </Grid>
-            <Grid>
+            <Grid item xs={12}>
               <TextField
                 label="Last Name"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                onBlur={handleNameBlur}
+
                 fullWidth
                 required
               />

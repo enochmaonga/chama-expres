@@ -12,12 +12,12 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Paper,
   CircularProgress,
   Grid,
-  Card,
 } from "@mui/material";
 import { SERVER_URL } from "@/config";
+import { useMediaQuery, useTheme } from "@mui/material"; // ← Add this at the top
+
 
 
 const monthsList = [
@@ -25,7 +25,7 @@ const monthsList = [
   "July", "August", "September", "October", "November", "December"
 ];
 
- const backendUrl = process.env.NEXT_PUBLIC_API_URL; 
+const backendUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const ContributionsPage = () => {
 
@@ -36,6 +36,8 @@ const ContributionsPage = () => {
     year: currentYear,
     memberNumber: "",
   });
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleFilterChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -115,98 +117,179 @@ const ContributionsPage = () => {
 
   const totalRowSum = Object.values(monthTotals).reduce((sum, val) => sum + val, 0);
 
+  const downloadCSV = () => {
+    const headers = ["Name", "Member No", ...monthsList, "Total"];
+    const rows = contributorRows.map((contributor) => [
+      contributor.name,
+      contributor.memberNumber,
+      ...monthsList.map(month => contributor.monthly[month] || 0),
+      contributor.rowTotal
+    ]);
+    rows.push([
+      "Monthly Totals", "",
+      ...monthsList.map(month => monthTotals[month]),
+      totalRowSum
+    ]);
+
+    const csvContent = [headers, ...rows].map(r => r.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `contributions_${filters.year}.csv`;
+    link.click();
+  };
+
+
   return (
     <Box p={{ xs: 2, md: 4 }}>
-  <Box mb={3} sx={{ mt: 8 }}>
-    <Grid container spacing={2}>
-      {/* Heading */}
-      <Grid item xs={12} sm={4}>
-        <Typography variant="h5" textAlign={{ xs: "center", sm: "left" }}>
-          Contributions - {currentYear}
-        </Typography>
-      </Grid>
+      <Box mb={3} sx={{ mt: 8 }}>
+        <Grid
+          container
+          spacing={2}
+          alignItems="center"
+          justifyContent="space-evenly"
+          sx={{ mt: 2 }}
+        >
+          {/* Heading */}
+          <Grid item xs={12} sm={3}>
+            <Typography
+              variant="h5"
+              textAlign={{ xs: "center", sm: "left" }}
+              fontWeight="bold"
+            >
+              Contributions - {filters.year}
+            </Typography>
+          </Grid>
 
-      {/* Year Filter */}
-      <Grid item xs={12} sm={4}>
-        <FormControl fullWidth>
-          <InputLabel>Year</InputLabel>
-          <Select
-            name="year"
-            value={filters.year}
-            onChange={handleFilterChange}
-            label="Year"
-          >
-            {[...Array(10)].map((_, i) => {
-              const year = currentYear - i;
-              return <MenuItem key={year} value={year}>{year}</MenuItem>;
-            })}
-          </Select>
-        </FormControl>
-      </Grid>
+          {/* Year Filter */}
+          <Grid item xs={12} sm={2}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Year</InputLabel>
+              <Select
+                name="year"
+                value={filters.year}
+                onChange={handleFilterChange}
+                label="Year"
+              >
+                {[...Array(10)].map((_, i) => {
+                  const year = currentYear - i;
+                  return (
+                    <MenuItem key={year} value={year}>
+                      {year}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </Grid>
 
-      {/* Member Number Filter */}
-      <Grid item xs={12} sm={4}>
-        <TextField
-          name="memberNumber"
-          value={filters.memberNumber}
-          onChange={handleFilterChange}
-          label="Member #"
-          fullWidth
-        />
-      </Grid>
-    </Grid>
-  </Box>
+          {/* Member Number Filter */}
+          <Grid item xs={12} sm={3}>
+            <TextField
+              name="memberNumber"
+              value={filters.memberNumber}
+              onChange={handleFilterChange}
+              label="Member #"
+              fullWidth
+              size="small"
+            />
+          </Grid>
 
-  {/* Table Section */}
-  {loading ? (
-    <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>
-  ) : contributorRows.length > 0 ? (
-    <Paper sx={{
-      width: '100%',
-      overflowX: 'auto',
-      mt: 2,
-      maxHeight: '70vh'
-    }}>
-      <Table size="small" sx={{ minWidth: 800 }}>
-        <TableHead>
-          <TableRow sx={{ backgroundColor: '#f7dabdff' }}>
-            <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Member #</TableCell>
-            {monthsList.map(month => (
-              <TableCell key={month} sx={{ fontWeight: 'bold' }}>
-                {month}
-              </TableCell>
-            ))}
-            <TableCell sx={{ fontWeight: 'bold' }}>Total</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {contributorRows.map((contributor, i) => (
-            <TableRow key={i}>
-              <TableCell>{contributor.name}</TableCell>
-              <TableCell>{contributor.memberNumber}</TableCell>
-              {monthsList.map(month => (
-                <TableCell key={month}>
-                  {contributor.monthly[month] || 0}
+          {/* Download Button */}
+          <Grid item xs={12} sm={2}>
+            <Box display="flex" justifyContent={{ xs: "center", sm: "flex-end" }}>
+              <button
+                onClick={downloadCSV}
+                style={{
+                  background: "#95a2b0ff",
+                  color: "white",
+                  border: "none",
+                  padding: "8px 16px",
+                  borderRadius: 4,
+                  cursor: "pointer",
+                }}
+              >
+                Download CSV
+              </button>
+            </Box>
+          </Grid>
+        </Grid>
+
+
+      </Box>
+
+      {/* Table Section */}
+      {loading ? (
+        <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>
+      ) : contributorRows.length > 0 ? (
+        <Box sx={{ overflowX: "auto" }}>
+          <Table sx={{ width: '100%', minWidth: isMobile ? 0 : 1000 }}>
+            <TableHead>
+              <TableRow sx={{ backgroundColor: '#f7dabdff' }}>
+                <TableCell sx={{ fontWeight: 'bold', position: 'sticky', top: 0, backgroundColor: '#f7dabdff', zIndex: 1 }}>
+                  Name
                 </TableCell>
+                <TableCell sx={{ fontWeight: 'bold', position: 'sticky', top: 0, backgroundColor: '#f7dabdff', zIndex: 1 }}>
+                  Member No
+                </TableCell>
+
+                {!isMobile && monthsList.map((month) => (
+                  <TableCell
+                    key={month}
+                    sx={{ fontWeight: 'bold', position: 'sticky', top: 0, backgroundColor: '#f7dabdff', zIndex: 1 }}
+                  >
+                    {month}
+                  </TableCell>
+                ))}
+
+                <TableCell sx={{ fontWeight: 'bold', position: 'sticky', top: 0, backgroundColor: '#f7dabdff', zIndex: 1 }}>
+                  Total
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {contributorRows.map((contributor, i) => (
+                <TableRow key={i}>
+                  <TableCell>{contributor.name}</TableCell>
+                  <TableCell>{contributor.memberNumber}</TableCell>
+
+                  {!isMobile && monthsList.map((month) => (
+                    <TableCell key={month}>
+                      {contributor.monthly[month] || 0}
+                    </TableCell>
+                  ))}
+
+                  <TableCell><strong>{contributor.rowTotal}</strong></TableCell>
+                </TableRow>
               ))}
-              <TableCell><strong>{contributor.rowTotal}</strong></TableCell>
-            </TableRow>
-          ))}
-          <TableRow>
-            <TableCell colSpan={2}><strong>Monthly Totals</strong></TableCell>
-            {monthsList.map(month => (
-              <TableCell key={month}><strong>{monthTotals[month]}</strong></TableCell>
-            ))}
-            <TableCell><strong>{totalRowSum}</strong></TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </Paper>
-  ) : (
-    <Typography textAlign="center" mt={3}>No contributions found.</Typography>
-  )}
-</Box>
+
+              {!isMobile && (
+                <TableRow>
+                  <TableCell colSpan={2}><strong>Monthly Totals</strong></TableCell>
+                  {monthsList.map((month) => (
+                    <TableCell key={month}><strong>{monthTotals[month]}</strong></TableCell>
+                  ))}
+                  <TableCell><strong>{totalRowSum}</strong></TableCell>
+                </TableRow>
+              )}
+
+              {/* Show only total on mobile */}
+              {isMobile && (
+                <TableRow>
+                  <TableCell colSpan={2}><strong>Total Contributions</strong></TableCell>
+                  <TableCell colSpan={1}><strong>{totalRowSum}</strong></TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+
+          </Table>
+
+        </Box>
+
+      ) : (
+        <Typography textAlign="center" mt={3}>No contributions found.</Typography>
+      )}
+    </Box>
 
   );
 };
