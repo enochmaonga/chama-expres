@@ -222,27 +222,38 @@ const ContributionsPage = () => {
       {loading ? (
         <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>
       ) : contributorRows.length > 0 ? (
-        <Box sx={{ overflowX: "auto" }}>
+        <Box sx={{ overflowX: 'auto', width: '100%', maxWidth: '100%'}}>
           <Table sx={{ width: '100%', minWidth: isMobile ? 0 : 1000 }}>
             <TableHead>
               <TableRow sx={{ backgroundColor: '#f7dabdff' }}>
-                <TableCell sx={{ fontWeight: 'bold', position: 'sticky', top: 0, backgroundColor: '#f7dabdff', zIndex: 1 }}>
+                <TableCell 
+                sx={{ fontWeight: 'bold', 
+                position: 'sticky', 
+                top: 0, 
+                backgroundColor: '#f7dabdff', 
+                zIndex: 1,
+                fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' },
+                whiteSpace: 'nowrap',
+                }}>
                   Name
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', position: 'sticky', top: 0, backgroundColor: '#f7dabdff', zIndex: 1 }}>
+                <TableCell sx={{ fontWeight: 'bold', position: 'sticky', top: 0, backgroundColor: '#f7dabdff', zIndex: 1, 
+                  fontSize: { xs: '0.7rem', sm: '0.8rem' }, whiteSpace: 'nowrap' }}>
                   Member No
                 </TableCell>
 
                 {!isMobile && monthsList.map((month) => (
                   <TableCell
                     key={month}
-                    sx={{ fontWeight: 'bold', position: 'sticky', top: 0, backgroundColor: '#f7dabdff', zIndex: 1 }}
+                    sx={{ fontWeight: 'bold', position: 'sticky', top: 0, backgroundColor: '#f7dabdff', 
+                      zIndex: 1, fontSize: { xs: '0.7rem', sm: '0.8rem' }, whiteSpace: 'nowrap' }}
                   >
                     {month}
                   </TableCell>
                 ))}
 
-                <TableCell sx={{ fontWeight: 'bold', position: 'sticky', top: 0, backgroundColor: '#f7dabdff', zIndex: 1 }}>
+                <TableCell sx={{ fontWeight: 'bold', position: 'sticky', top: 0, backgroundColor: '#f7dabdff', 
+                  zIndex: 1, fontSize: { xs: '0.7rem', sm: '0.8rem' }, whiteSpace: 'nowrap' }}>
                   Total
                 </TableCell>
               </TableRow>

@@ -24,6 +24,7 @@ const backendUrl = process.env.NEXT_PUBLIC_API_URL;
 function CashCollectionForm() {
   const [nameOptions, setNameOptions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [selectedMember, setSelectedMember] = useState(null);
   const [formData, setFormData] = useState({
     phoneNumber: "", // optional
     firstName: "",
@@ -75,6 +76,8 @@ function CashCollectionForm() {
 
 
   const handleNameSelect = (event, selectedOption) => {
+    setSelectedMember(selectedOption); // update selected member
+
     if (selectedOption) {
       setFormData((prev) => ({
         ...prev,
@@ -85,6 +88,7 @@ function CashCollectionForm() {
       }));
     }
   };
+
 
 
   const handleSubmit = async (e) => {
@@ -115,6 +119,8 @@ function CashCollectionForm() {
           month: "",
           year: ""
         });
+        setSelectedMember(null); // Reset selected member
+
       }
     } catch (error) {
       console.error("Submission failed:", error);
@@ -147,12 +153,15 @@ function CashCollectionForm() {
               <Autocomplete
                 freeSolo={false}
                 options={nameOptions}
+                value={selectedMember}
                 getOptionLabel={(option) =>
                   typeof option === "string"
                     ? option
                     : `${option.firstName} ${option.lastName} (${option.memberNumber})`
                 }
-                isOptionEqualToValue={(option, value) => option.memberNumber === value.memberNumber}
+                isOptionEqualToValue={(option, value) =>
+                  option.memberNumber === value.memberNumber
+                }
                 onInputChange={handleFirstNameInputChange}
                 onChange={handleNameSelect}
                 loading={loadingSuggestions}
@@ -165,7 +174,6 @@ function CashCollectionForm() {
                   />
                 )}
               />
-
 
             </Grid>
             <Grid item xs={12}>
